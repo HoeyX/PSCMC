@@ -1,5 +1,5 @@
 CC=cc
-CFLAG=-O0 -lm -I./
+CFLAG=-O0 -lm -I./ -std=gnu89
 PREFIX=/usr/local
 all	:cscheme scmc2c_pre_pass scmc2c_multi_pass
 cscheme	:cscheme.c singlemath.h binops.h uthash.h types.h
