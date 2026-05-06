@@ -12,6 +12,45 @@ general_element global_argv;
 INT getc_from_port(struct_port in);
 INT ungetc_from_port(INT c,struct_port in);
 INT delete_void_char(struct_port in);
+#if defined(_WIN32) && !defined(HAVE_GETLINE)
+static ssize_t getline(char **lineptr, size_t *n, FILE *stream){
+	size_t pos=0;
+	int ch;
+	char *buffer_local;
+	if(lineptr==NULL || n==NULL || stream==NULL){
+		return -1;
+	}
+	if(*lineptr==NULL || *n==0){
+		*n=128;
+		*lineptr=(char *)malloc(*n);
+		if(*lineptr==NULL){
+			return -1;
+		}
+	}
+	buffer_local=*lineptr;
+	while((ch=fgetc(stream))!=EOF){
+		if(pos + 1 >= *n){
+			size_t new_size = (*n) * 2;
+			char *new_buffer = (char *)realloc(buffer_local,new_size);
+			if(new_buffer==NULL){
+				return -1;
+			}
+			buffer_local=new_buffer;
+			*lineptr=new_buffer;
+			*n=new_size;
+		}
+		buffer_local[pos++]=(char)ch;
+		if(ch=='\n'){
+			break;
+		}
+	}
+	if(pos==0 && ch==EOF){
+		return -1;
+	}
+	buffer_local[pos]=0;
+	return (ssize_t)pos;
+}
+#endif
 INT dec_is_slash(char * str,INT cur_i){
 	INT ret=1;
 	cur_i--;
@@ -98,7 +137,7 @@ INT isint_or_float(const char * buf){ //int=1, float=2, other=0
 
 INT read_int_from_buf(char * buf){
 	INT ans;
-	sscanf(buf,"%ld",&ans);
+	sscanf(buf,"%lld",&ans);
 	return ans;
 }
 FLOAT read_float_from_buf(char * buf){
@@ -629,7 +668,7 @@ general_element internal_get_build_in_ports (general_element n){
 }
 general_element internal_str2list(general_element str){
 	if(TYPE_OF(str)!=STRING){
-		fprintf(stderr,"type=%ld,should be %d\n",TYPE_OF(str),STRING);
+		fprintf(stderr,"type=%lld,should be %d\n",TYPE_OF(str),STRING);
 		fprintf(stderr,"str is not a string in str2list.\n");
 		assert(0);
 		return the_empty_list;
@@ -719,7 +758,7 @@ general_element internal_str2symbol(general_element sym){
 general_element internal_num2str(general_element input){
 	char str[128];
 	if(TYPE_OF(input)==INT_NUM){
-		sprintf(str,"%ld",input.data.num_int);
+		sprintf(str,"%lld",input.data.num_int);
 	}else if(TYPE_OF(input)==FLOAT_NUM){
 		sprintf(str,"%.16e",input.data.num_float);
 	}else{

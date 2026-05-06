@@ -15,7 +15,7 @@
 
 jmp_buf global_jump_env;
 #if SCHEME_DEBUG
-#define ERR_REPORT(errornum) {long i=0; while(global_caller!=empty_list_process && i<100){fprintf(stderr,"\n#%ld ",i);write_element(car(global_caller)->data.gc_stack.tmpele[0],stderr);global_caller=cdr(global_caller);i++;} fprintf(stderr,"\n");longjmp(global_jump_env,errornum);}
+#define ERR_REPORT(errornum) {long long i=0; while(global_caller!=empty_list_process && i<100){fprintf(stderr,"\n#%lld ",i);write_element(car(global_caller)->data.gc_stack.tmpele[0],stderr);global_caller=cdr(global_caller);i++;} fprintf(stderr,"\n");longjmp(global_jump_env,errornum);}
 #else
 #define ERR_REPORT(errornum) {longjmp(global_jump_env,errornum);}
 #endif//SCHEME_DEBUG
@@ -299,7 +299,7 @@ void dump_debug(allocated_list * p_al){
 		fprintf(stderr,"0x%lx ",ele);
 		switch(ele->type){
 			case INTNUM:
-				fprintf(stderr,"int: %ld\n",ele->data.intnum);
+				fprintf(stderr,"int: %lld\n",ele->data.intnum);
 				break;
 			case MFLOATNUM:
 				fprintf(stderr,"float: %e\n",ele->data.floatnum);
@@ -625,7 +625,7 @@ element * read_element(FILE * in){
 
 	int intorfloat=isint_or_float(buffer);
 	if(intorfloat==1){
-		sscanf(buffer,"%ld",&ans->data.intnum);
+		sscanf(buffer,"%lld",&ans->data.intnum);
 		ans->type=INTNUM;
 		return ans;
 	}
@@ -750,7 +750,7 @@ void write_element(element * ele,FILE *out){
 			fprintf(out,"#<gc_stack>");
 			break;
 		case INTNUM:
-			fprintf(out,"%ld",ele->data.intnum);
+			fprintf(out,"%lld",ele->data.intnum);
 			break;
 		case MFLOATNUM:
 			if(float_dump_mode==0){ 
@@ -772,7 +772,7 @@ void write_element(element * ele,FILE *out){
 				long i;
 				case INTVEC:
 					for(i=0;i<ele->data.vector.vec_len;i++){
-						fprintf(out,"%ld ",ele->data.vector.vector_data.p_int[i]);
+						fprintf(out,"%lld ",ele->data.vector.vector_data.p_int[i]);
 					}
 					break;
 				case MFLOATVEC:
@@ -1028,7 +1028,7 @@ element * internal_symbol2str(element * ele){
 long pub_gensym_int=0;
 element * internal_gensym(element * ele){
 	char str[128];
-	sprintf(str,"#GEN%ld",pub_gensym_int);
+	sprintf(str,"#GEN%lld",pub_gensym_int);
 	pub_gensym_int++;
 	return makesymbol(str);
 }
@@ -1056,7 +1056,7 @@ element * internal_num2str(element * input){
 	input=car(input);
 	char str[128];
 	if(input->type==INTNUM){
-		sprintf(str,"%ld",input->data.intnum);
+		sprintf(str,"%lld",input->data.intnum);
 	}else if(input->type==MFLOATNUM){
 		sprintf(str,"%.16e",input->data.floatnum);
 	}else{
@@ -1126,7 +1126,7 @@ element * internal_str2num(element * input){
 	element * ans=alloc_element();
 	if(iof==1){
 		long rt;
-		sscanf(str,"%ld",&rt);
+		sscanf(str,"%lld",&rt);
 		ans->type=INTNUM;
 		ans->data.intnum=rt;
 	}else if(iof==2){
@@ -1179,7 +1179,7 @@ element * internal_vec_ref(element * ele){
 	}
 	long k=car(cdr(ele))->data.intnum;
 	if(k<0||k>=self->data.vector.vec_len){
-		fprintf(stderr,"Error: vector-ref index out of range: %ld",k);
+		fprintf(stderr,"Error: vector-ref index out of range: %lld",k);
 		ERR_REPORT(1);
 	}
 	SWITCHVECTOR(self->data.vector.type,return makeint(self->data.vector.vector_data.p_int[k]),return makefloat(self->data.vector.vector_data.p_float[k]),return self->data.vector.vector_data.p_general[k]);
@@ -1221,7 +1221,7 @@ element * internal_vec_set(element * ele){
 	}
 	long k=car(cdr(ele))->data.intnum;
 	if(k<0||k>=self->data.vector.vec_len){
-		fprintf(stderr,"Error: vector-set! index out of range: %ld",k);
+		fprintf(stderr,"Error: vector-set! index out of range: %lld",k);
 		ERR_REPORT(1);
 	}
 	element * val=car(cdr(cdr(ele)));

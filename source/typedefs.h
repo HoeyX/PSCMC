@@ -1,7 +1,7 @@
 #ifndef TYPES_FOR_CSCHEME_COMPILER
 #define TYPES_FOR_CSCHEME_COMPILER
 typedef double FLOAT;
-typedef long INT;
+typedef long long INT;
 typedef enum {INT_NUM=512,FLOAT_NUM,BOOLEAN,CHAR,STRING,VECTOR,PAIR,EMPTY_LIST,FUNCTION,SYMBOL,PORT,EOF_OBJECT}types;
 
 typedef struct general_element

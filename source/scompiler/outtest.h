@@ -299,7 +299,7 @@ general_element internal_get_build_in_ports(general_element);
 general_element internal_car(general_element p){
 	if(TYPE_OF(p)!=PAIR){
 		//internal_write(p,internal_get_build_in_ports(init_from_int(2)));
-		fprintf(stderr,"type=%ld,should be %ld\n",TYPE_OF(p),PAIR);
+		fprintf(stderr,"type=%lld,should be %d\n",TYPE_OF(p),PAIR);
 	}
 	assert(TYPE_OF(p)==PAIR);
 	return GETCAR(p);
@@ -308,7 +308,7 @@ general_element internal_get_build_in_ports(general_element );
 general_element internal_cdr(general_element p){
 	if(TYPE_OF(p)!=PAIR){
 		//internal_write(p,internal_get_build_in_ports(init_from_int(2)));
-		fprintf(stderr,"type=%ld,should be %ld\n",TYPE_OF(p),PAIR);
+		fprintf(stderr,"type=%lld,should be %d\n",TYPE_OF(p),PAIR);
 	}
 	assert(TYPE_OF(p)==PAIR);
 	return GETCDR(p);
@@ -345,7 +345,7 @@ general_element internal_write_p(general_element * m,general_element fp){
 	donesym.data.num_int=0;
 	switch (TYPE_OF_P(m)){
 		case INT_NUM:
-			fprintf(outfp,"%ld",m->data.num_int);
+			fprintf(outfp,"%lld",m->data.num_int);
 			break;
 		case FLOAT_NUM:
 			fprintf(outfp,"%.17e",m->data.num_float); 

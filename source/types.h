@@ -5,7 +5,7 @@ typedef struct element
 {
 	ele_type type;
 	union{
-		long intnum;
+		long long intnum;
 		double floatnum;
 		char boolean;
 		char char_var;
@@ -13,14 +13,14 @@ typedef struct element
 		void * else_var;
 		struct {
 			char * symbolname;
-			long symbol_id;
+			long long symbol_id;
 		}symbol;
 		struct{
 			struct element * car;
 			struct element * cdr;
 			char istail;
 		}pair;
-		long var_name_hashed;
+		long long var_name_hashed;
 		struct{
 			struct element * paras;
 			struct element * body;
@@ -33,10 +33,10 @@ typedef struct element
 		}macro;
 		struct{
 			vec_type type;
-			long vec_len;
+			long long vec_len;
 			union{
 				struct element ** p_general;
-				long * p_int;
+				long long * p_int;
 				double * p_float;
 			}vector_data;
 		}vector;
@@ -67,7 +67,7 @@ typedef struct allocated_list{
 }allocated_list;
 
 typedef struct {
-	long symbol_id;
+	long long symbol_id;
 	//char * symbolname;
 	//element * symbol;
 	element * value;

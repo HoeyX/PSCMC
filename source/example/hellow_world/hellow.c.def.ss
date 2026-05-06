@@ -1,0 +1,1 @@
+((main (int) (((int) argc) ((char * *) argv))))()

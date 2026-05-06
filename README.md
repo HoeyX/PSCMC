@@ -50,3 +50,31 @@ in machines with large memory. I have test it under amd64 Linux systems. Then us
 ./gen_pscmc_compiler
 ```
 to generate the SCMC and PSCMC compilers.
+
+# Windows
+On Windows with MinGW-w64 `gcc` available in `PATH`, you can build the ready-to-use PSCMC converter from the generated C sources with:
+
+```powershell
+cd source
+powershell -ExecutionPolicy Bypass -File .\build_windows.ps1
+```
+
+This produces Windows-specific executables:
+
+- `cscheme_win.exe`
+- `scmc2c_pre_pass_win.exe`
+- `scmc2c_multi_pass_win.exe`
+
+Before running the PowerShell wrappers, set:
+
+```powershell
+$env:SCMC_COMPILE_ROOT = (Resolve-Path .\source).Path
+```
+
+Then convert a `.scmc` file directly, for example:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\source\scmc_compile_passes.ps1 .\source\example\hellow_world\hellow.scmc C device
+```
+
+This Windows flow has been verified for direct `.scmc` to C conversion. The original shell scripts are kept unchanged for Linux environments.

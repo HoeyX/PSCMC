@@ -1,0 +1,1 @@
+((muladd_scmc_kernel (void) (((double *) A) ((double *) B) ((double *) C) ((long) scmc_internal_g_idy) ((long) scmc_internal_g_ylen))))((muladd (((double *) A) ((double *) B) ((double *) C))))
